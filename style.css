@@ -1,4 +1,4 @@
-﻿/* ═══════════════════════════════════════
+/* ═══════════════════════════════════════
    WatermarksCleaner - style.css
    ═══════════════════════════════════════ */
 
@@ -361,7 +361,7 @@ code, .code-card-body { font-family: 'JetBrains Mono', monospace; }
 
 /* ── Output area ── */
 .tool-output {
-  min-height: 300px; padding: 18px; overflow-y: auto;
+  min-height: 300px; max-height: 500px; padding: 18px; overflow-y: auto;
   font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; line-height: 1.7;
   color: var(--text); white-space: pre-wrap; word-break: break-word;
 }
