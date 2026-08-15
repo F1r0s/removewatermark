@@ -162,20 +162,62 @@
             </label>
           </div>
         </div>
-        <div class="tool-panel" id="tool-output-panel">
-          <div class="panel-header">
-            <span class="panel-title">✅ Cleaned Output</span>
-            <button class="btn-sm" id="copy-btn" disabled>Copy</button>
+        <div class="tool-panel-wrapper" id="tool-output-wrapper">
+          <div class="tool-panel" id="tool-output-panel">
+            <div class="panel-header">
+              <span class="panel-title">✅ Cleaned Output</span>
+              <button class="btn-sm" id="copy-btn" disabled>Copy</button>
+            </div>
+            <div class="tool-output" id="output-area" role="region" aria-live="polite">
+              <div class="output-placeholder" id="output-placeholder">
+                <div class="placeholder-icon">✨</div>
+                <p>Your cleaned text will appear here.</p>
+                <p class="placeholder-hint">Invisible watermark characters are stripped before output.</p>
+              </div>
+            </div>
+            <div class="panel-footer"><span class="char-count" id="output-char-count"></span></div>
           </div>
-          <div class="tool-output" id="output-area" role="region" aria-live="polite">
-            <div class="output-placeholder" id="output-placeholder">
-              <div class="placeholder-icon">✨</div>
-              <p>Your cleaned text will appear here.</p>
-              <p class="placeholder-hint">Invisible watermark characters are stripped before output.</p>
+
+          <!-- Content Locker Overlay -->
+          <div class="locker-overlay" id="locker-overlay" hidden>
+            <div class="locker-glass"></div>
+            <div class="locker-inner">
+              <div class="locker-header">
+                <div class="locker-lock-anim" id="locker-lock-anim">
+                  <div class="lock-ring"></div>
+                  <div class="lock-icon">🔒</div>
+                </div>
+                <h2 class="locker-title">Unlock Your Result</h2>
+                <p class="locker-sub">Complete one free offer below to instantly reveal your cleaned text</p>
+                <div class="locker-steps">
+                  <div class="locker-step active"><span class="step-num">1</span><span>Choose offer</span></div>
+                  <div class="step-arrow">→</div>
+                  <div class="locker-step" id="step2"><span class="step-num">2</span><span>Complete it</span></div>
+                  <div class="step-arrow">→</div>
+                  <div class="locker-step" id="step3"><span class="step-num">3</span><span>Auto-unlock ✨</span></div>
+                </div>
+              </div>
+
+              <div class="locker-offers-grid" id="locker-offers">
+                <!-- Offers injected by JS -->
+                <div class="locker-loading">
+                  <div class="locker-spinner"></div>
+                  <span>Loading offers...</span>
+                </div>
+              </div>
+
+              <div class="locker-checking" id="locker-checking" hidden>
+                <div class="locker-spinner locker-spinner--lg"></div>
+                <p class="locker-checking-title">Verifying your completion…</p>
+                <p class="locker-checking-sub">This can take up to 60 seconds. Keep this tab open.</p>
+                <div class="locker-timer-bar"><div class="locker-timer-fill" id="locker-timer-fill"></div></div>
+              </div>
+
+              <p class="locker-note">🔒 100% secure · Powered by OGAds · No personal data stored</p>
             </div>
           </div>
-          <div class="panel-footer"><span class="char-count" id="output-char-count"></span></div>
         </div>
+
       </div>
       <div class="stats-banner" id="stats-banner" hidden>
         <div class="stat-item"><span>🚫</span><span id="stat-removed-text">0 chars removed</span></div>
