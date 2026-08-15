@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -134,11 +134,21 @@
           </div>
         </div>
         <div class="tool-controls">
-          <button class="scan-btn" id="scan-btn" aria-label="Scan and clean watermarks">
-            <span class="scan-btn-icon">🛡️</span>
-            <span class="scan-btn-text">Clean<br/>Watermarks</span>
-            <div class="scan-btn-ring"></div>
-          </button>
+          <div class="main-buttons" style="display: flex; gap: 1rem; width: 100%;">
+            <button class="scan-btn" id="scan-btn" aria-label="Scan and clean watermarks" style="flex: 1;">
+              <span class="scan-btn-icon">🛡️</span>
+              <span class="scan-btn-text">Clean<br/>(Layer A)</span>
+              <div class="scan-btn-ring"></div>
+            </button>
+            <button class="scan-btn" id="rewrite-btn" aria-label="Rewrite text (Layer B)" style="flex: 1; --btn-glow: rgba(59, 130, 246, 0.5); background: linear-gradient(135deg, hsl(220, 80%, 60%), hsl(220, 80%, 45%));">
+              <span class="scan-btn-icon">✨</span>
+              <span class="scan-btn-text">Rewrite<br/>(Layer B)</span>
+              <div class="scan-btn-ring"></div>
+            </button>
+          </div>
+          <div class="cloud-disclaimer" style="font-size: 0.75rem; color: var(--text-muted); text-align: center; margin-top: 0.5rem;">
+            *Layer B sends text to Groq Cloud API for rewriting. Layer A is 100% private/browser-local.
+          </div>
           <div class="options-panel">
             <label class="option-toggle" for="opt-spaces">
               <input type="checkbox" id="opt-spaces" checked />

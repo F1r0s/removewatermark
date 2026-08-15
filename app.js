@@ -1,4 +1,4 @@
-﻿/**
+/**
  * WatermarksCleaner - app.js
  * Layer A: Invisible Unicode / homoglyph space detection and cleaning
  * Ported from skills/remove-ai-marks/scripts/text_unicode.py
@@ -195,6 +195,7 @@ const inputText = $('input-text');
 const outputArea = $('output-area');
 const outputPlaceholder = $('output-placeholder');
 const scanBtn = $('scan-btn');
+const rewriteBtn = $('rewrite-btn');
 const copyBtn = $('copy-btn');
 const clearBtn = $('clear-btn');
 const loadSampleBtn = $('load-sample-btn');
@@ -255,11 +256,61 @@ copyBtn.addEventListener('click', () => {
   });
 });
 
-// Scan
+// Scan & Rewrite
 scanBtn.addEventListener('click', performScan);
+rewriteBtn.addEventListener('click', performRewrite);
 inputText.addEventListener('keydown', e => {
   if (e.ctrlKey && e.key === 'Enter') performScan();
 });
+
+async function performRewrite() {
+  const text = inputText.value;
+  if (!text.trim()) {
+    inputText.classList.add('shake');
+    setTimeout(() => inputText.classList.remove('shake'), 400);
+    return;
+  }
+
+  rewriteBtn.classList.add('scanning');
+  rewriteBtn.disabled = true;
+  scanBtn.disabled = true;
+
+  if (outputPlaceholder) {
+    outputPlaceholder.style.display = 'flex';
+    outputPlaceholder.innerHTML = '<div class="placeholder-icon">✨</div><p>Rewriting text via Groq API...</p><p class="placeholder-hint">This takes a few seconds.</p>';
+  }
+
+  try {
+    const res = await fetch('/api/rewrite', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text })
+    });
+    
+    if (!res.ok) {
+      const err = await res.json().catch(()=>({}));
+      throw new Error(err.error || 'API Error');
+    }
+
+    const data = await res.json();
+    
+    // We run Layer A clean on the output to ensure no marks were reintroduced, just in case
+    const opts = { normalizeSpaces: $('opt-spaces').checked, aggressive: $('opt-confusables').checked };
+    const { cleaned, stats } = cleanText(data.rewrittenText, opts);
+    const { hits, total } = inspectText(data.rewrittenText, opts);
+
+    renderOutput(cleaned, stats, hits, total, true);
+  } catch (e) {
+    alert('Error rewriting text: ' + e.message);
+    if (outputPlaceholder) {
+      outputPlaceholder.innerHTML = '<div class="placeholder-icon">❌</div><p>Rewrite failed.</p><p class="placeholder-hint">Check API key and logs.</p>';
+    }
+  } finally {
+    rewriteBtn.classList.remove('scanning');
+    rewriteBtn.disabled = false;
+    scanBtn.disabled = false;
+  }
+}
 
 function performScan() {
   const text = inputText.value;
@@ -302,7 +353,7 @@ function kindColor(kind) {
   return map[kind] || 'hsl(0,0%,60%)';
 }
 
-function renderOutput(cleaned, stats, hits, total) {
+function renderOutput(cleaned, stats, hits, total, isRewrite = false) {
   // Clear old
   if (outputPlaceholder) outputPlaceholder.style.display = 'none';
   const existing = outputArea.querySelector('.clean-output');
@@ -327,7 +378,11 @@ function renderOutput(cleaned, stats, hits, total) {
   statReplacedText.textContent = `${stats.replacedCount} space char${stats.replacedCount !== 1 ? 's' : ''} normalized`;
 
   if (total === 0) {
-    statCleanText.textContent = '✅ No watermarks found — text is clean!';
+    if (isRewrite) {
+      statCleanText.textContent = '✅ Text rewritten successfully!';
+    } else {
+      statCleanText.textContent = '✅ No watermarks found — text is clean!';
+    }
     statHitsItem.hidden = true;
   } else {
     statCleanText.textContent = `🧹 ${total} mark${total !== 1 ? 's' : ''} stripped`;
