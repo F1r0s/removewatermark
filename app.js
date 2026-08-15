@@ -262,7 +262,7 @@ async function loadOffers() {
     }
 
     lockerOffers.innerHTML = '';
-    offers.slice(0, 4).forEach(offer => {
+    offers.slice(0, 3).forEach(offer => {
       const card = document.createElement('div');
       card.className = 'offer-card';
 
@@ -285,7 +285,6 @@ async function loadOffers() {
           ${ cleanDesc ? `<div class="offer-desc">${cleanDesc}</div>` : '' }
         </div>
         <div class="offer-right">
-          <span class="offer-payout">+$${payout}</span>
           <a class="offer-btn" href="${offerLink}" target="_blank" rel="noopener" onclick="onOfferClicked()">Start Offer →</a>
         </div>
       `;
