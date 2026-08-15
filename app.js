@@ -289,7 +289,11 @@ async function performRewrite() {
     
     if (!res.ok) {
       const err = await res.json().catch(()=>({}));
-      throw new Error(err.error || 'API Error');
+      let errMsg = err.error || 'API Error';
+      if (err.details && err.details.error && err.details.error.message) {
+        errMsg += ': ' + err.details.error.message;
+      }
+      throw new Error(errMsg);
     }
 
     const data = await res.json();
